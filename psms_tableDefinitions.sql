@@ -1,6 +1,9 @@
 use psms;
 
 select * from shelter;
+select * from staff;
+
+insert into staff (name,role,phone,email,password,shelterID) values ("ali","assistant","98934343","ali@yahoo.com","33333",3);
 
 create table user(
 	userID int primary key not null auto_increment,
@@ -119,13 +122,15 @@ foreign key(petID) references pet(petID);
 
 create table petDoc(
 	document varchar(100) primary key not null,
-    petID int
+    petID int,
+    type varchar(50)
 );
 
 alter table petDoc
 add constraint petOwnerOfDocumentConstraint
 foreign key(petID) references pet(petID);
 
+-- drop table petDoc;
 
 
 -- set foreign_key_checks = 0;
