@@ -100,5 +100,8 @@ public class ManagerService {
         return staffDAO.get(staffId);
     }
 
+    public Optional<Staff> getStaffByEmail(String email){
+        return staffDAO.getByEmail(email);
+    }
 
 }

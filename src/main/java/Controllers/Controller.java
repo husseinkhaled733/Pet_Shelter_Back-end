@@ -88,4 +88,13 @@ public class Controller {
         if(shelterContainer.isEmpty()){return null;}
         return managerService.getAllStaffOfShelter(shelterContainer.get());
     }
+
+    @GetMapping("/staff/{email}")
+    public Staff getStaffMemberByEmail(@PathVariable String email){
+        //can be user to get any staff member by email, including
+        //the manager
+        Optional<Staff> memberContainer =
+                managerService.getStaffByEmail(email);
+        return memberContainer.orElse(null);
+    }
 }
