@@ -1,6 +1,7 @@
 package com.example.demo.Controllers;
 
 
+import com.example.demo.Model.Staff;
 import com.example.demo.Services.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,14 @@ public class RegistrationController {
 //        managerService.addNewManager(staffDTO);
 //        return "Manager added successfully";
 //    }
+    @PostMapping("/register/addManager")
+    public String addNewManager(@RequestBody Staff manager){
+        if(managerService.emailExistsInStaff(manager.getEmail())){
+            return "Email already exists";
+        }
+        managerService.addNewManager(manager);
+        return "Manager added successfully";
+    }
 
 
 }

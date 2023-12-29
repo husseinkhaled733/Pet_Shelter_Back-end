@@ -1,10 +1,12 @@
 package com.example.demo.Services;
 
 
+import com.example.demo.DAO.SecDAO;
 import com.example.demo.DAO.ShelterDAO;
 import com.example.demo.DAO.StaffDAO;
 import com.example.demo.Model.Shelter;
 import com.example.demo.Model.Staff;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,18 +20,27 @@ public class ManagerService {
     private ShelterDAO shelterDAO;
     @Autowired
     private StaffDAO staffDAO;
+    @Autowired
+    private SecDAO secDAO;
 
-    public ManagerService(ShelterDAO shelterDAO, StaffDAO staffDAO){
+    public ManagerService(ShelterDAO shelterDAO, StaffDAO staffDAO, SecDAO secDAO){
         this.shelterDAO = shelterDAO;
         this.staffDAO = staffDAO;
+        this.secDAO = secDAO;
     }
 
     public void addNewManager(Staff manager){
+        manager.setPassword(BCrypt.hashpw(manager.getPassword(), BCrypt.gensalt()));
         staffDAO.addManager(manager);
+        secDAO.addManager(manager);
     }
 
-    public void addNewShelter(Shelter shelter, Staff manager){
-        shelter.setManagerID(manager.getStaffID());
+    public void addNewShelter(Shelter shelter, String managerEmail){
+        Optional<Staff> managerContainer = staffDAO.getByEmail(managerEmail);
+        if(managerContainer.isEmpty()){
+            throw new RuntimeException("Manager not found");
+        }
+        shelter.setManagerID(managerContainer.get().getStaffID());
         shelterDAO.add(shelter);
         //shelterID of manager is assigned by a trigger
     }
@@ -47,16 +58,26 @@ public class ManagerService {
         return shelterDAO.get(staffContainer.get().getShelterID());
     }
 
-    public boolean addNewStaff(Staff staff, Staff manager){
-        Optional<Shelter> shelterContainer = getShelterOfStaff(manager.getStaffID());
+    public boolean addNewStaff(Staff staff, String managerEmail){
+        Optional<Staff> managerContainer = staffDAO.getByEmail(managerEmail);
+        if(managerContainer.isEmpty()){
+            throw new RuntimeException("Manager not found");
+        }
+        Optional<Shelter> shelterContainer = getShelterOfStaff(managerContainer.get().getStaffID());
         if(shelterContainer.isEmpty()){return false;}
         staff.setShelterID(shelterContainer.get().getId());
+        staff.setPassword(BCrypt.hashpw(staff.getPassword(), BCrypt.gensalt()));
+        secDAO.addStaff(staff);
         staffDAO.add(staff);
         return true;
     }
 
-    public List<Staff> getAllStaffOfShelter(Shelter shelter){
-        return staffDAO.getByShelterID(shelter.getId());
+    public List<Staff> getAllStaffOfShelter(String shelterEmail){
+        Optional<Shelter> shelterContainer = shelterDAO.getShelterByEmail(shelterEmail);
+        if(shelterContainer.isEmpty()){
+            throw new RuntimeException("Shelter not found");
+        }
+        return staffDAO.getByShelterID(shelterContainer.get().getId());
     }
 
     public Staff getManagerOfShelter(Shelter shelter){
@@ -109,4 +130,7 @@ public class ManagerService {
         return staffDAO.getByEmail(email);
     }
 
+    public void deleteStaffByEmail(String staffEmail){
+        staffDAO.delete(staffEmail);
+    }
 }

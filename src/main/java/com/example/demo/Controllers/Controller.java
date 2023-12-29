@@ -17,20 +17,19 @@ public class Controller {
     @Autowired
     private ManagerService managerService;
 
-    @PostMapping("/addManager")
-    public String addNewManager(@RequestBody Staff manager){
-        if(managerService.emailExistsInStaff(manager.getEmail())){
-            return "Email already exists";
-        }
-        managerService.addNewManager(manager);
-        return "Manager added successfully";
-    }
+//    @PostMapping("/addManager")
+//    public String addNewManager(@RequestBody Staff manager){
+//        if(managerService.emailExistsInStaff(manager.getEmail())){
+//            return "Email already exists";
+//        }
+//        managerService.addNewManager(manager);
+//        return "Manager added successfully";
+//    }
 
-    @PostMapping("/addShelter")
+    @PostMapping("/manager/addShelter")
     public String addNewShelter(@RequestBody AddShelterRequestWrapper body){
         Shelter shelter = body.getShelter();
-        Staff manager = body.getManager();
-        System.out.println(manager);
+        Staff manager = managerService.getStaffByEmail(body.getManagerEmail()).get();
         //requires: shelter, manager
         if(managerService.emailExistsInShelters(shelter.getEmail())){
             return "Shelter email already exists";
@@ -41,14 +40,14 @@ public class Controller {
         if(managerService.getShelterOfStaff(manager.getStaffID()).isPresent()){
             return "Manager already manages a shelter";
         }
-        managerService.addNewShelter(shelter, manager);
+        managerService.addNewShelter(shelter, manager.getEmail());
         return "Shelter added successfully";
     }
 
-    @PostMapping("/addStaffMember")
+    @PostMapping("/manager/addStaffMember")
     public String addNewStaff(@RequestBody AddStaffRequestWrapper body){
         Staff staff = body.getStaff();
-        Staff manager = body.getManager();
+        Staff manager = managerService.getStaffByEmail(body.getManagerEmail()).get();
         //requires staff, manager
         if(!managerService.staffExists(manager.getStaffID())){
             return "Manager not found";
@@ -56,25 +55,25 @@ public class Controller {
         if(managerService.emailExistsInStaff(staff.getEmail())){
             return "Staff email already exists";
         }
-        if(!managerService.addNewStaff(staff, manager)){
+        if(!managerService.addNewStaff(staff, manager.getEmail())){
             return "Error";
         }
         return "Staff member added successfully";
     }
 
-    @GetMapping("/shelter/{shelterId}")
+    @GetMapping("/manager/shelter/{shelterId}")
     public Shelter getShelterById(@PathVariable int shelterId){
         return managerService.getShelterById(shelterId).orElse(
                 Shelter.builder().name("Shelter Not Found").build()
         );
     }
 
-    @GetMapping("/shelter/{shelterId}/getStaff")
+    @GetMapping("/manager/shelter/{shelterId}/getStaff")
     public List<Staff> getStaffByShelterId(@PathVariable int shelterId){
         Optional<Shelter> shelterContainer
                 = managerService.getShelterById(shelterId);
         if(shelterContainer.isEmpty()){return null;}
-        return managerService.getAllStaffOfShelter(shelterContainer.get());
+        return managerService.getAllStaffOfShelter(shelterContainer.get().getEmail());
     }
 
     @GetMapping("/manager/{managerId}/getStaff")
@@ -87,10 +86,23 @@ public class Controller {
                         managerContainer.get().getShelterID()
         );
         if(shelterContainer.isEmpty()){return null;}
-        return managerService.getAllStaffOfShelter(shelterContainer.get());
+        return managerService.getAllStaffOfShelter(shelterContainer.get().getEmail());
     }
 
-    @GetMapping("/staff/{email}")
+    @GetMapping("/manager/{managerEmail}/getStaff")
+    public List<Staff> getStaffByManagerEmail(@PathVariable String managerEmail){
+        Optional<Staff> managerContainer
+                = managerService.getStaffByEmail(managerEmail);
+        if(managerContainer.isEmpty()){return null;}
+        Optional<Shelter> shelterContainer
+                = managerService.getShelterById(
+                managerContainer.get().getShelterID()
+        );
+        if(shelterContainer.isEmpty()){return null;}
+        return managerService.getAllStaffOfShelter(shelterContainer.get().getEmail());
+    }
+
+    @GetMapping("/manager/getStaff/{email}")
     public Staff getStaffMemberByEmail(@PathVariable String email){
         //can be user to get any staff member by email, including
         //the manager
@@ -99,6 +111,24 @@ public class Controller {
         return memberContainer.orElse(null);
     }
     //TODO getStaffOfShelterByEmail
+
+    @GetMapping("/manager/getAllStaff/{managerEmail}")
+    public List<Staff> getStaffOfShelterByManagerEmail(@PathVariable String managerEmail){
+        Optional<Staff> managerOptional = managerService.getStaffByEmail(managerEmail);
+        if(managerOptional.isEmpty()){
+            throw new RuntimeException("Manager not found");
+        }
+        Optional<Shelter> shelterOptional = managerService.getShelterOfStaff(managerOptional.get().getStaffID());
+        if(shelterOptional.isEmpty()){
+            throw new RuntimeException("No shelter is managed by this manager");
+        }
+
+        return managerService.getAllStaffOfShelter(shelterOptional.get().getEmail());
+    }
     //TODO deleteStaff
+    @GetMapping("/manager/deleteStaff/{staffEmail}")
+    public void deleteStaff(@PathVariable String staffEmail){
+        managerService.deleteStaffByEmail(staffEmail);
+    }
 
 }

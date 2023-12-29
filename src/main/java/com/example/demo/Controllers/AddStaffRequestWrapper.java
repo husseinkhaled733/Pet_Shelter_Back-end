@@ -9,5 +9,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class AddStaffRequestWrapper {
     private Staff staff;
-    private Staff manager;
+    private String managerEmail;
 }

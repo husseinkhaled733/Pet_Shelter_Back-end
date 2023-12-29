@@ -10,5 +10,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class AddShelterRequestWrapper {
     private Shelter shelter;
-    private Staff manager;
+    private String managerEmail;
 }

@@ -159,4 +159,14 @@ public class StaffDAO implements DAO<Staff>{
         );
         template.update(sql, id);
     }
+
+    public void delete(String email) {
+//        String sql = "delete from staff where email = ?";
+        String sql = String.format(
+                "delete from %s where %s = ?",
+                table,
+                emailColumn
+        );
+        template.update(sql, email);
+    }
 }
