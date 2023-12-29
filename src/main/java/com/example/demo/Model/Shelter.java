@@ -1,12 +1,14 @@
 package com.example.demo.Model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
 @Data
-@ToString
+@AllArgsConstructor
 @Builder
+@ToString
 public class Shelter {
     private int id;
     private String name;
@@ -15,5 +17,5 @@ public class Shelter {
     private String phone;
     private String email;
     private String detailedAddress;
-    private int managerId;
+    private int managerID;
 }

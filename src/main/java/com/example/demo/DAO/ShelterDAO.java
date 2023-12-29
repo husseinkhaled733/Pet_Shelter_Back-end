@@ -1,10 +1,12 @@
 package com.example.demo.DAO;
 
+
 import com.example.demo.Model.Shelter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -13,24 +15,47 @@ public class ShelterDAO implements DAO<Shelter>{
     private JdbcTemplate template;
     private RowMapper<Shelter> shelterRowMapper;
 
+    private final String table = "shelter";
+    private final String shelterIdColumn = "shelter_id";
+    private final String nameColumn = "name";
+    private final String countryColumn = "country";
+    private final String cityColumn = "city";
+    private final String phoneColumn = "phone";
+    private final String emailColumn = "email";
+    private final String detailedAddressColumn = "detailed_address";
+    private final String managerIdColumn = "manager_id";
     public ShelterDAO(JdbcTemplate template){
         this.template = template;
-        shelterRowMapper = ((rs, rowNum) -> Shelter.builder()
-                .id(rs.getInt("shelter_id"))
-                .name(rs.getString("name"))
-                .country(rs.getString("country"))
-                .city(rs.getString("city"))
-                .phone(rs.getString("phone"))
-                .email(rs.getString("email"))
-                .detailedAddress(rs.getString("detailed_address"))
-                .managerId(rs.getInt(rs.getInt("manager_id")))
-                .build());
+        shelterRowMapper = ((rs, rowNum) -> {
+           return Shelter.builder()
+                   .id(rs.getInt(shelterIdColumn))
+                   .name(rs.getString(nameColumn))
+                   .country(rs.getString(countryColumn))
+                   .city(rs.getString(cityColumn))
+                   .phone(rs.getString(phoneColumn))
+                   .email(rs.getString(emailColumn))
+                   .detailedAddress(rs.getString(detailedAddressColumn))
+                   .managerID(rs.getInt(managerIdColumn))
+                   .build();
+        });
     }
 
     @Override
     public void add(Shelter shelter) {
-        String sql = "insert into shelter (name, country, city, phone," +
-                " email, detailed_address, manager_id) values (?,?,?,?,?,?,?)";
+//        String sql = "insert into shelter (name, country, city, phone," +
+//                " email, detailedAddress, managerID) values (?,?,?,?,?,?,?)";
+        String sql = String.format(
+                "insert into %s (%s,%s,%s,%s,%s,%s,%s) values (?,?,?,?,?,?,?)",
+                table,
+                nameColumn,
+                countryColumn,
+                cityColumn,
+                phoneColumn,
+                emailColumn,
+                detailedAddressColumn,
+                managerIdColumn
+        );
+
         //shelterID is auto-Incremented
         //TODO managerID
         template.update(
@@ -41,23 +66,40 @@ public class ShelterDAO implements DAO<Shelter>{
                 shelter.getPhone(),
                 shelter.getEmail(),
                 shelter.getDetailedAddress(),
-                shelter.getManagerId()
+                shelter.getManagerID()
         );
     }
 
     @Override
     public Optional<Shelter> get(int id) {
-        String sql = "select * from shelter where shelter_id = ?";
-        return Optional.ofNullable(template
-                .queryForObject(sql, shelterRowMapper, id));
+//        String sql = "select * from shelter where shelterID = ?";
+        String sql = String.format(
+                "select * from %s where %s = ?",
+                table,
+                shelterIdColumn
+        );
+        List<Shelter> shelterList = template.query(sql, shelterRowMapper, id);
+        return Optional.ofNullable(
+                shelterList.isEmpty() ? null : shelterList.get(0)
+        );
     }
 
     @Override
     public void update(Shelter updatedShelter) {
-        String sql = "update shelter set name = ?, country = ?, city = ?, " +
-                "phone = ?, email = ?, detailed_address = ?" +
-//                ", managerID = ? " +
-                "where shelter_id = ?";
+//        String sql = "update shelter set name = ?, country = ?, city = ?, " +
+//                "phone = ?, email = ?, detailedAddress = ?" +
+//                "where shelterID = ?";
+        String sql = String.format(
+                "update %s set %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ? where %s = ?",
+                table,
+                nameColumn,
+                countryColumn,
+                cityColumn,
+                phoneColumn,
+                emailColumn,
+                detailedAddressColumn,
+                shelterIdColumn
+        );
         template.update(
                 sql,
                 updatedShelter.getName(),
@@ -66,15 +108,31 @@ public class ShelterDAO implements DAO<Shelter>{
                 updatedShelter.getPhone(),
                 updatedShelter.getEmail(),
                 updatedShelter.getDetailedAddress(),
-                //TODO managerID
-//                updatedShelter.getManagerID(),
                 updatedShelter.getId()
         );
     }
 
     @Override
     public void delete(int id) {
-        String sql = "delete from shelter where shelter_id = ?";
+//        String sql = "delete from shelter where shelterID = ?";
+        String sql = String.format(
+                "delete from %s where %s = ?",
+                table,
+                shelterIdColumn
+        );
         template.update(sql, id);
+    }
+
+    public Optional<Shelter> getShelterByEmail(String email){
+//        String sql = "select * from shelter where email = ?";
+        String sql = String.format(
+                "select * from %s where %s = ?",
+                table,
+                emailColumn
+        );
+        List<Shelter> shelterList = template.query(sql, shelterRowMapper, email);
+        return Optional.ofNullable(
+                shelterList.isEmpty() ? null : shelterList.get(0)
+        );
     }
 }

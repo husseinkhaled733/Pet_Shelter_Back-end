@@ -1,10 +1,8 @@
 package com.example.demo.Controllers;
 
-import com.example.demo.DTOs.StaffDTO;
 import com.example.demo.Services.ManagerService;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,9 +26,9 @@ public class TestController {
         return "Hello World staff";
     }
 
-    @GetMapping("/admin/test")
-    public String getTestSAdmin(@RequestBody StaffDTO staffDTO ) {
-        managerService.addNewManager(staffDTO);
-        return "Manager added successfully";
-    }
+//    @GetMapping("/admin/test")
+//    public String getTestSAdmin(@RequestBody StaffDTO staffDTO ) {
+//        managerService.addNewManager(staffDTO);
+//        return "Manager added successfully";
+//    }
 }
