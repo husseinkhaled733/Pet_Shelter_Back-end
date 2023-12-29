@@ -9,7 +9,7 @@ import java.util.Collection;
 @Data
 @Builder
 public class Adopter  {
-    private String adopterId;
+    private int adopterId;
     private String name;
     private String phone;
     private String email;
