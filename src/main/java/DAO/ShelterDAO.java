@@ -72,8 +72,6 @@ public class ShelterDAO implements DAO<Shelter>{
                 updatedShelter.getPhone(),
                 updatedShelter.getEmail(),
                 updatedShelter.getDetailedAddress(),
-                //TODO managerID
-//                updatedShelter.getManagerID(),
                 updatedShelter.getId()
         );
     }
