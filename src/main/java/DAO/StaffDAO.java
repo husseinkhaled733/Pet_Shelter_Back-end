@@ -52,7 +52,7 @@ public class StaffDAO implements DAO<Staff>{
         template.update(
                 sql,
                 manager.getName(),
-                manager.getRole(),
+                "manager",
                 manager.getPhone(),
                 manager.getEmail(),
                 manager.getPassword()
@@ -62,14 +62,18 @@ public class StaffDAO implements DAO<Staff>{
     @Override
     public Optional<Staff> get(int id) {
         String sql = "select * from staff where staffID = ?";
-        return Optional.ofNullable(template
-                .queryForObject(sql, staffRowMapper, id));
+        List<Staff> staffList = template.query(sql, staffRowMapper, id);
+        return Optional.ofNullable(
+                staffList.isEmpty() ? null : staffList.get(0)
+        );
     }
 
     public Optional<Staff> getByEmail(String email){
         String sql = "select * from staff where email = ?";
-        return Optional.ofNullable(template
-                .queryForObject(sql, staffRowMapper, email));
+        List<Staff> staffList = template.query(sql, staffRowMapper, email);
+        return Optional.ofNullable(
+                staffList.isEmpty() ? null : staffList.get(0)
+        );
     }
 
     public List<Staff> getByShelterID(int shelterID){

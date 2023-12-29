@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -25,7 +26,7 @@ public class ShelterDAO implements DAO<Shelter>{
                    .setPhone(rs.getString("phone"))
                    .setEmail(rs.getString("email"))
                    .setDetailedAddress(rs.getString("detailedAddress"))
-                   .setManagerID(rs.getInt(rs.getInt("managerID")))
+                   .setManagerID(rs.getInt("managerID"))
                    .get();
         });
     }
@@ -51,8 +52,10 @@ public class ShelterDAO implements DAO<Shelter>{
     @Override
     public Optional<Shelter> get(int id) {
         String sql = "select * from shelter where shelterID = ?";
-        return Optional.ofNullable(template
-                .queryForObject(sql, shelterRowMapper, id));
+        List<Shelter> shelterList = template.query(sql, shelterRowMapper, id);
+        return Optional.ofNullable(
+                shelterList.isEmpty() ? null : shelterList.get(0)
+        );
     }
 
     @Override
@@ -79,5 +82,13 @@ public class ShelterDAO implements DAO<Shelter>{
     public void delete(int id) {
         String sql = "delete from shelter where shelterID = ?";
         template.update(sql, id);
+    }
+
+    public Optional<Shelter> getShelterByEmail(String email){
+        String sql = "select * from shelter where email = ?";
+        List<Shelter> shelterList = template.query(sql, shelterRowMapper, email);
+        return Optional.ofNullable(
+                shelterList.isEmpty() ? null : shelterList.get(0)
+        );
     }
 }
