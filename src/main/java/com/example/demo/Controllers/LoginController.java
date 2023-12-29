@@ -18,10 +18,4 @@ public class LoginController {
         return "Successful Login";
     }
 
-//    @GetMapping("/Login")
-//    public String Login(){
-//
-//        // Do something with the username
-//        return "Successful Login";
-//    }
 }
