@@ -28,7 +28,7 @@ public class ManagerService {
     }
 
     public void addNewShelter(Shelter shelter, Staff manager){
-        shelter.setManagerID(manager.getId());
+        shelter.setManagerID(manager.getStaffID());
         shelterDAO.add(shelter);
         //shelterID of manager is assigned by a trigger
     }
@@ -39,11 +39,15 @@ public class ManagerService {
     }
 
     public Optional<Shelter> getShelterOfStaff(int staffId){
-        return shelterDAO.get(staffDAO.get(staffId).get().getShelterID());
+        Optional<Staff> staffContainer = staffDAO.get(staffId);
+        if(staffContainer.isEmpty()){
+            throw new RuntimeException("Cannot find manager");
+        }
+        return shelterDAO.get(staffContainer.get().getShelterID());
     }
 
     public boolean addNewStaff(Staff staff, Staff manager){
-        Optional<Shelter> shelterContainer = getShelterOfStaff(manager.getId());
+        Optional<Shelter> shelterContainer = getShelterOfStaff(manager.getStaffID());
         if(shelterContainer.isEmpty()){return false;}
         staff.setShelterID(shelterContainer.get().getId());
         staffDAO.add(staff);
@@ -75,7 +79,7 @@ public class ManagerService {
         Optional<Shelter> shelterContainer = getShelterOfStaff(currentManager);
         if(shelterContainer.isEmpty()){return false;}
         Shelter shelter = shelterContainer.get();
-        shelter.setManagerID(newManager.getId());
+        shelter.setManagerID(newManager.getStaffID());
         shelterDAO.update(shelter);
         return true;
     }

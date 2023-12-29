@@ -1,13 +1,11 @@
 package Controllers;
 
 import Model.Shelter;
-import Model.ShelterBuilder;
 import Model.Staff;
 import Services.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,14 +28,15 @@ public class Controller {
     public String addNewShelter(@RequestBody AddShelterRequestWrapper body){
         Shelter shelter = body.getShelter();
         Staff manager = body.getManager();
+        System.out.println(manager);
         //requires: shelter, manager
         if(managerService.emailExistsInShelters(shelter.getEmail())){
             return "Shelter email already exists";
         }
-        if(!managerService.staffExists(manager.getId())){
+        if(!managerService.staffExists(manager.getStaffID())){
             return "Manager not found";
         }
-        if(managerService.getShelterOfStaff(manager.getId()).isPresent()){
+        if(managerService.getShelterOfStaff(manager.getStaffID()).isPresent()){
             return "Manager already manages a shelter";
         }
         managerService.addNewShelter(shelter, manager);
@@ -49,7 +48,7 @@ public class Controller {
         Staff staff = body.getStaff();
         Staff manager = body.getManager();
         //requires staff, manager
-        if(!managerService.staffExists(manager.getId())){
+        if(!managerService.staffExists(manager.getStaffID())){
             return "Manager not found";
         }
         if(managerService.emailExistsInStaff(staff.getEmail())){
@@ -64,7 +63,7 @@ public class Controller {
     @GetMapping("/shelter/{shelterId}")
     public Shelter getShelterById(@PathVariable int shelterId){
         return managerService.getShelterById(shelterId).orElse(
-                new ShelterBuilder().setName("Shelter Not Found").get()
+                Shelter.builder().name("Shelter Not Found").build()
         );
     }
 
@@ -97,4 +96,7 @@ public class Controller {
                 managerService.getStaffByEmail(email);
         return memberContainer.orElse(null);
     }
+    //TODO getStaffOfShelterByEmail
+    //TODO deleteStaff
+
 }
