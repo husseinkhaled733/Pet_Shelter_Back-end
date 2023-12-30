@@ -133,4 +133,10 @@ public class ManagerService {
     public void deleteStaffByEmail(String staffEmail){
         staffDAO.delete(staffEmail);
     }
+
+    public void updateShelter(Shelter shelter, String managerEmail){
+        Staff manager = staffDAO.getByEmail(managerEmail).get();
+        shelter.setManagerID(manager.getStaffID());
+        shelterDAO.update(shelter);
+    }
 }

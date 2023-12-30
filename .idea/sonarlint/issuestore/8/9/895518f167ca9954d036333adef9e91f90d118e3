@@ -1,8 +1,10 @@
 
-[	java:S112w"FDefine and throw a dedicated exception instead of using a generic one.(õ•¼É
-`	java:S112{"FDefine and throw a dedicated exception instead of using a generic one.(øÁˆÿÿÿÿÿ
+b	java:S112w"FDefine and throw a dedicated exception instead of using a generic one.(õ•¼É8ÊµÄÃË1
+g	java:S112{"FDefine and throw a dedicated exception instead of using a generic one.(øÁˆÿÿÿÿÿ8ËµÄÃË1
+c	java:S112‹"FDefine and throw a dedicated exception instead of using a generic one.(õ•¼É8ËµÄÃË1
+h	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(øÁˆÿÿÿÿÿ8ÌµÄÃË1
 m
-java:S1192&"RDefine a constant instead of duplicating this literal "Manager not found" 3 times.(¸úüÿÿÿÿ
+java:S1192&"RDefine a constant instead of duplicating this literal "Manager not found" 4 times.(¸úüÿÿÿÿ
 t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(³éíëÿÿÿÿÿ
 l
 java:S3655 "PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(÷¯³28ñ¬ßÂË1
@@ -17,11 +19,11 @@ A
 java:S1168S"+Return an empty collection instead of null.(ËÈ¬°
 A
 java:S1168X"+Return an empty collection instead of null.(­œ•
-A
-java:S1168`"+Return an empty collection instead of null.(ËÈ¬°
-A
-java:S1168e"+Return an empty collection instead of null.(­œ•
-M
-java:S1135q"2Complete the task associated to this TODO comment.(œ†Úéøÿÿÿÿ
-N
-java:S1135€"2Complete the task associated to this TODO comment.(üş­¡øÿÿÿÿ
+H
+java:S1168`"+Return an empty collection instead of null.(ËÈ¬°8¸¶ÄÃË1
+H
+java:S1168e"+Return an empty collection instead of null.(­œ•8¹¶ÄÃË1
+T
+java:S1135q"2Complete the task associated to this TODO comment.(œ†Úéøÿÿÿÿ8½¶ÄÃË1
+U
+java:S1135€"2Complete the task associated to this TODO comment.(üş­¡øÿÿÿÿ8Â¶ÄÃË1

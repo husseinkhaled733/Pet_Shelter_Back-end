@@ -89,7 +89,7 @@ public class Controller {
         return managerService.getAllStaffOfShelter(shelterContainer.get().getEmail());
     }
 
-    @GetMapping("/manager/{managerEmail}/getStaff")
+    @GetMapping("/manager/getAllStaff/{managerEmail}")
     public List<Staff> getStaffByManagerEmail(@PathVariable String managerEmail){
         Optional<Staff> managerContainer
                 = managerService.getStaffByEmail(managerEmail);
@@ -129,6 +129,25 @@ public class Controller {
     @GetMapping("/manager/deleteStaff/{staffEmail}")
     public void deleteStaff(@PathVariable String staffEmail){
         managerService.deleteStaffByEmail(staffEmail);
+    }
+
+    @GetMapping("/manager/getShelter/{managerEmail}")
+    public Shelter getShelterOfManager(@PathVariable String managerEmail){
+        Optional<Staff> managerOptional = managerService.getStaffByEmail(managerEmail);
+
+        if(managerOptional.isEmpty()){
+            throw new RuntimeException("Manager not found");
+        }
+        Optional<Shelter> shelterOptional = managerService.getShelterOfStaff(managerOptional.get().getStaffID());
+        if(shelterOptional.isEmpty()){
+            throw new RuntimeException("No shelter is managed by this manager");
+        }
+        return shelterOptional.get();
+    }
+
+    @PutMapping("/manager/updateShelter")
+    public void updateShelter(@RequestBody AddShelterRequestWrapper body){
+        managerService.updateShelter(body.getShelter(), body.getManagerEmail());
     }
 
 }

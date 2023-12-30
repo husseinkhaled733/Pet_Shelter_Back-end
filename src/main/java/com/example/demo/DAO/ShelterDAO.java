@@ -98,7 +98,7 @@ public class ShelterDAO implements DAO<Shelter>{
                 phoneColumn,
                 emailColumn,
                 detailedAddressColumn,
-                shelterIdColumn
+                managerIdColumn
         );
         template.update(
                 sql,
@@ -108,7 +108,7 @@ public class ShelterDAO implements DAO<Shelter>{
                 updatedShelter.getPhone(),
                 updatedShelter.getEmail(),
                 updatedShelter.getDetailedAddress(),
-                updatedShelter.getId()
+                updatedShelter.getManagerID()
         );
     }
 
