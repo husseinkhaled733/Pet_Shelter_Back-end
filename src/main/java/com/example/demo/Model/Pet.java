@@ -22,4 +22,5 @@ public class Pet {
     private String behavior;
     private String description;
     private int shelterID;
+    private boolean available;
 }

@@ -29,6 +29,8 @@ public class PetDAO implements DAO<Pet> {
     private final String descriptionColumn = "description";
     private final String shelterIDColumn = "shelter_id";
 
+    private final String availableColumn = "available";
+
 
     public PetDAO(JdbcTemplate template){
         this.template = template;
@@ -49,6 +51,7 @@ public class PetDAO implements DAO<Pet> {
                     .behavior(rs.getString(behaviorColumn))
                     .description(rs.getString(descriptionColumn))
                     .shelterID(rs.getInt(shelterIDColumn))
+                    .available(rs.getBoolean(availableColumn))
                     .build();
         });
     }
