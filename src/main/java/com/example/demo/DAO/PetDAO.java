@@ -107,7 +107,7 @@ public class PetDAO implements DAO<Pet> {
 //                " dateOfBirth = ?, species = ?, breed = ?, behavior = ?," +
 //                " description = ? where petID = ?";
         String sql = String.format(
-                "update %s set %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ? where %s = ?",
+                "update %s set %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ? where %s = ?",
                 table,
                 nameColumn,
                 genderColumn,
@@ -117,6 +117,7 @@ public class PetDAO implements DAO<Pet> {
                 breedColumn,
                 behaviorColumn,
                 descriptionColumn,
+                availableColumn,
                 petIdColumn
         );
         template.update(
@@ -129,6 +130,7 @@ public class PetDAO implements DAO<Pet> {
                 updatedPet.getBreed(),
                 updatedPet.getBehavior(),
                 updatedPet.getDescription(),
+                updatedPet.isAvailable(),
                 updatedPet.getPetID()
         );
     }
