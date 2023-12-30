@@ -190,4 +190,8 @@ public class PetDAO implements DAO<Pet> {
     }
 
 
+    public List<Pet> getAllPets(){
+        String sql = "select * from pet";
+        return template.query(sql, petRowMapper);
+    }
 }
