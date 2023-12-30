@@ -39,11 +39,10 @@ public class AdopterController {
     }
 
     @GetMapping("/adopter/viewApplications/{adopterEmail}")
-    public List<Application> viewApplications(@PathVariable String adopterEmail) {
+    public List<AdopterApplicationResponse> viewApplications(@PathVariable String adopterEmail) {
         if(!adopterService.emailExistsInAdopter(adopterEmail)){
             throw new RuntimeException("Adopter not found");
         }
-
         return adopterService.viewApplications(adopterEmail);
     }
 
