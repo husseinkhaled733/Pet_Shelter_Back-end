@@ -106,4 +106,18 @@ public class AdopterDAO implements DAO<Adopter>{
         template.update(sql, email);
     }
     //search - filter - view application - submit application
+    public Optional<Adopter> getByEmail(String email){
+//        String sql = "select * from staff where email = ?";
+        String sql = String.format(
+                "select * from %s where %s = ?",
+                table,
+                emailColumn
+        );
+        List<Adopter> adopterList = template.query(sql, adopterRowMapper, email);
+
+        return Optional.ofNullable(
+                adopterList.isEmpty() ? null : adopterList.get(0)
+        );
+
+    }
 }

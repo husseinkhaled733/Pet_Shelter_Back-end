@@ -1,5 +1,6 @@
 package com.example.demo.DAO;
 
+import com.example.demo.Model.Adopter;
 import com.example.demo.Model.Staff;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -45,18 +46,18 @@ public class SecDAO {
         );
     }
 
-    public void addAdopter(Staff staff) {
+    public void addAdopter(Adopter adopter) {
         String usersSql = "insert into users (username, password, enabled) values (?,?,?)";
         String authoritiesSql = "insert into authorities (username, authority) values (?,?)";
         template.update(
                 usersSql,
-                staff.getEmail(),
-                "{bcrypt}" + staff.getPassword(),
+                adopter.getEmail(),
+                "{bcrypt}" + adopter.getPassword(),
                 true
         );
         template.update(
                 authoritiesSql,
-                staff.getEmail(),
+                adopter.getEmail(),
                 "ROLE_ADOPTER"
         );
     }
