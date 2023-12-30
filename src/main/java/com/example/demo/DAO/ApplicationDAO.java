@@ -85,8 +85,10 @@ public class ApplicationDAO{
 //        String sql = "select adopter_id, pet_id from " +
 //                "pet join application on pet.pet_id = application.pet_id";
         String sql = String.format(
-                "select %s,%s from %s join %s on %s.%s = %s.%s",
+                "select %s.%s,%s.%s from %s join %s on %s.%s = %s.%s",
+                table,
                 adopterIdColumn,
+                table,
                 petIdColumn,
                 petTable,
                 table,
