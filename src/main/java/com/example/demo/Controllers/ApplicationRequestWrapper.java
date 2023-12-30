@@ -1,7 +1,9 @@
 package com.example.demo.Controllers;
 
-public class ApplicationRequestWrapper {
+import lombok.Data;
 
+@Data
+public class ApplicationRequestWrapper {
     private int petId;
-    private String userEmail;
+    private String AdopterEmail;
 }

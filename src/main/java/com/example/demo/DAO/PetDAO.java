@@ -40,12 +40,7 @@ public class PetDAO implements DAO<Pet> {
                     .name(rs.getString(nameColumn))
                     .gender(rs.getBoolean(genderColumn))
                     .healthStatus(rs.getString(healthStatusColumn))
-                    .dateOfBirth(
-                            rs.getDate(dateOfBirthColumn)
-                                    .toInstant()
-                                    .atZone(ZoneId.systemDefault())
-                                    .toLocalDate()
-                    )
+                    .dateOfBirth(rs.getDate(dateOfBirthColumn).toLocalDate())
                     .species(rs.getString(speciesColumn))
                     .breed(rs.getString(breedColumn))
                     .behavior(rs.getString(behaviorColumn))
@@ -63,7 +58,7 @@ public class PetDAO implements DAO<Pet> {
 //                "values (?,?,?,?,?,?,?,?,?)";
 //
         String sql = String.format(
-                "insert into %s (%s, %s, %s, %s, %s, %s, %s, %s, %s) values (?,?,?,?,?,?,?,?,?)",
+                "insert into %s (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) values (?,?,?,?,?,?,?,?,?,?)",
                 table,
                 nameColumn,
                 genderColumn,
@@ -73,7 +68,8 @@ public class PetDAO implements DAO<Pet> {
                 breedColumn,
                 behaviorColumn,
                 descriptionColumn,
-                shelterIDColumn
+                shelterIDColumn,
+                availableColumn
         );
         //petID is auto-incremented
         template.update(
@@ -86,7 +82,8 @@ public class PetDAO implements DAO<Pet> {
                 pet.getBreed(),
                 pet.getBehavior(),
                 pet.getDescription(),
-                pet.getShelterID()
+                pet.getShelterID(),
+                pet.isAvailable()
         );
     }
 
@@ -158,35 +155,39 @@ public class PetDAO implements DAO<Pet> {
     }
 
 
-    public List<Pet> getAllPetsWithCriteria(SearchRequestWrapper searchRequestWrapper){
+    public List<Pet> getAllPetsWithCriteria(SearchRequestWrapper searchRequestWrapper) {
+        String sql = "SELECT " +
+                "pet_id, " +
+                "psms.pet.name, " +
+                "date_of_birth, " +
+                "gender, " +
+                "health_status, " +
+                "species, " +
+                "breed, " +
+                "behavior, " +
+                "psms.pet.description, " +
+                "psms.pet.shelter_id, " +
+                "psms.pet.available " +
+                "FROM " +
+                "pet " +
+                "JOIN " +
+                "shelter ON pet.shelter_id = shelter.shelter_id " +
+                "WHERE " +
+                "shelter.name LIKE ? " +
+                "AND pet.species LIKE ? " +
+                "AND pet.breed LIKE ? " +
+                "AND TIMESTAMPDIFF(YEAR, pet.date_of_birth, CURDATE()) <= ?";
 
-        //I want to search on pets using shelter name, species, breed, age
-        String sql = String.format(
-                "select %s, %s, %s, %s, %s, %s, %s, %s, %s, %s " +
-                        "from %s join shelter on pet.shelter_id = shelter.shelter_id " +
-                        "where shelter.name like ? " +
-                        "and pet.species like ? " +
-                        "and pet.breed like ? " +
-                        "and AND TIMESTAMPDIFF(YEAR, pet.date_of_birth, CURDATE()) <= ?",
-                petIdColumn,
-                nameColumn,
-                dateOfBirthColumn,
-                genderColumn,
-                healthStatusColumn,
-                speciesColumn,
-                breedColumn,
-                behaviorColumn,
-                descriptionColumn,
-                shelterIDColumn,
-                table
-        );
         return template.query(
                 sql,
                 petRowMapper,
+                // Pass parameters for placeholders
                 searchRequestWrapper.getShelterName(),
                 searchRequestWrapper.getSpecies(),
                 searchRequestWrapper.getBreed(),
                 searchRequestWrapper.getAge()
         );
     }
+
+
 }

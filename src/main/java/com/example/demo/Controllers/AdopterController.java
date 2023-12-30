@@ -1,5 +1,7 @@
 package com.example.demo.Controllers;
 
+import com.example.demo.DAO.AdopterDAO;
+import com.example.demo.Model.Application;
 import com.example.demo.Model.Pet;
 import com.example.demo.Services.AdopterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class AdopterController {
     @Autowired
     AdopterService adopterService;
 
+    @Autowired
+    AdopterDAO adopterDAO;
+
     @GetMapping("/adopter/search")
     public List<Pet> searchForPet(@RequestBody SearchRequestWrapper body) {
         return adopterService.searchForPet(body);
@@ -29,13 +34,17 @@ public class AdopterController {
 
     @PostMapping("/adopter/application")
     public String submitApplication(@RequestBody ApplicationRequestWrapper body) {
-        //petId, useremail
-        return null;
+        adopterService.submitApplication(body);
+        return "successfully submitted application";
     }
 
-    @GetMapping("/adopter/viewApplications")
-    public String viewApplications() {
-        return null;
+    @GetMapping("/adopter/viewApplications/{adopterEmail}")
+    public List<Application> viewApplications(@PathVariable String adopterEmail) {
+        if(!adopterService.emailExistsInAdopter(adopterEmail)){
+            throw new RuntimeException("Adopter not found");
+        }
+
+        return adopterService.viewApplications(adopterEmail);
     }
 
 
