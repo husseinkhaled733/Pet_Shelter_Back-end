@@ -115,11 +115,12 @@ public class StaffDAO implements DAO<Staff>{
     }
 
     public List<Staff> getByShelterID(int shelterID){
-//        String sql = "select * from staff where shelterID = ?";
+//        String sql = "select * from staff where shelterID = ? AND role = 'staff'";
         String sql = String.format(
-                "select * from %s where %s = ?",
+                "select * from %s where %s = ? AND %s = 'staff'",
                 table,
-                shelterIdColumn
+                shelterIdColumn,
+                roleColumn
         );
         return template.query(sql, staffRowMapper, shelterID);
     }

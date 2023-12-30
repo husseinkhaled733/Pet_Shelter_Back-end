@@ -89,19 +89,6 @@ public class Controller {
         return managerService.getAllStaffOfShelter(shelterContainer.get().getEmail());
     }
 
-    @GetMapping("/manager/getAllStaff/{managerEmail}")
-    public List<Staff> getStaffByManagerEmail(@PathVariable String managerEmail){
-        Optional<Staff> managerContainer
-                = managerService.getStaffByEmail(managerEmail);
-        if(managerContainer.isEmpty()){return null;}
-        Optional<Shelter> shelterContainer
-                = managerService.getShelterById(
-                managerContainer.get().getShelterID()
-        );
-        if(shelterContainer.isEmpty()){return null;}
-        return managerService.getAllStaffOfShelter(shelterContainer.get().getEmail());
-    }
-
     @GetMapping("/manager/getStaff/{email}")
     public Staff getStaffMemberByEmail(@PathVariable String email){
         //can be user to get any staff member by email, including
