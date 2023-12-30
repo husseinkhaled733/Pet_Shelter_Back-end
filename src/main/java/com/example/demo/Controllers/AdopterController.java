@@ -31,7 +31,7 @@ public class AdopterController {
     @Autowired
     PetDAO petDAO;
 
-    @GetMapping("/adopter/search")
+    @PostMapping("/adopter/search")
     public List<Pet> searchForPet(@RequestBody SearchNot body) {
         SearchRequestWrapper body2 = new SearchRequestWrapper();
         body2.setShelterName(body.getShelterName());
@@ -48,12 +48,15 @@ public class AdopterController {
 
     @PostMapping("/adopter/application")
     public String submitApplication(@RequestBody ApplicationRequestWrapper body) {
+        System.out.println(body.getAdopterEmail());
         adopterService.submitApplication(body);
         return "successfully submitted application";
     }
 
     @GetMapping("/adopter/viewApplications/{adopterEmail}")
     public List<AdopterApplicationResponse> viewApplications(@PathVariable String adopterEmail) {
+        System.out.println("Viewing applications");
+        System.out.println(adopterEmail);
         if(!adopterService.emailExistsInAdopter(adopterEmail)){
             throw new RuntimeException("Adopter not found");
         }

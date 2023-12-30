@@ -26,8 +26,8 @@ public class ApplicationDAO{
         this.template = template;
         this.applicationRowMapper = ((rs, rowNum) -> {
             return new Application(
-                    rs.getInt(adopterIdColumn),
                     rs.getInt(petIdColumn),
+                    rs.getInt(adopterIdColumn),
                     rs.getString(statusColumn)
             );
         });

@@ -44,6 +44,7 @@ public class AdopterService {
 
     //submit application
     public void submitApplication(ApplicationRequestWrapper body ) {
+        System.out.println(body.getAdopterEmail());
         Optional<Adopter> adopterContainer = adopterDAO.getByEmail(body.getAdopterEmail());
         if(adopterContainer.isEmpty()){
             throw new RuntimeException("Adopter not found");
@@ -67,11 +68,13 @@ public class AdopterService {
             throw new RuntimeException("Adopter not found");
         }
         List<Application> applications = applicationDAO.getApplicationsOfAdopter(adopterContainer.get().getAdopterId());
+        System.out.println(adopterContainer.get().getAdopterId());
         //loop over this applications list and cereate new list called response list of type AdopterApplicationResponse
         //for each application, get the pet name from pet table and add it to the response list with status from applications list
         List<AdopterApplicationResponse> responseList = new ArrayList<>();
         for(Application a: applications){
             AdopterApplicationResponse response = new AdopterApplicationResponse();
+            System.out.println(a.getPetId());
             Optional<Pet> petContainer = petDAO.get(a.getPetId());
             if(petContainer.isEmpty()){
                 throw new RuntimeException("Pet not found");

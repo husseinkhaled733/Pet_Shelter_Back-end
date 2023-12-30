@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class ApplicationRequestWrapper {
     private int petId;
-    private String AdopterEmail;
+    private String adopterEmail;
 }
