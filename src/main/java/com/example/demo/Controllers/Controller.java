@@ -89,7 +89,7 @@ public class Controller {
         return managerService.getAllStaffOfShelter(shelterContainer.get().getEmail());
     }
 
-    @GetMapping("/manager/{managerEmail}/getStaff")
+    @GetMapping("/manager/getAllStaff/{managerEmail}")
     public List<Staff> getStaffByManagerEmail(@PathVariable String managerEmail){
         Optional<Staff> managerContainer
                 = managerService.getStaffByEmail(managerEmail);
