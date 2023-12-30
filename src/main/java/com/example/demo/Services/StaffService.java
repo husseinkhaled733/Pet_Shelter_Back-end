@@ -1,14 +1,8 @@
 package com.example.demo.Services;
 
 
-import com.example.demo.DAO.PetDAO;
-import com.example.demo.DAO.PetDocumentDAO;
-import com.example.demo.DAO.PetImageDAO;
-import com.example.demo.DAO.StaffDAO;
-import com.example.demo.Model.Pet;
-import com.example.demo.Model.PetDocument;
-import com.example.demo.Model.PetImage;
-import com.example.demo.Model.Staff;
+import com.example.demo.DAO.*;
+import com.example.demo.Model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,17 +19,29 @@ public class StaffService {
     private PetImageDAO petImageDAO;
     @Autowired
     private PetDocumentDAO petDocumentDAO;
+    @Autowired
+    private ApplicationDAO applicationDAO;
+    @Autowired
+    private ShelterDAO shelterDAO;
+    @Autowired
+    private AdopterDAO adopterDAO;
 
     public StaffService(
             StaffDAO staffDAO,
             PetDAO petDAO,
             PetImageDAO petImageDAO,
-            PetDocumentDAO petDocumentDAO
+            PetDocumentDAO petDocumentDAO,
+            ApplicationDAO applicationDAO,
+            ShelterDAO shelterDAO,
+            AdopterDAO adopterDAO
     ){
         this.petDAO = petDAO;
         this.staffDAO = staffDAO;
         this.petImageDAO = petImageDAO;
         this.petDocumentDAO = petDocumentDAO;
+        this.applicationDAO = applicationDAO;
+        this.shelterDAO = shelterDAO;
+        this.adopterDAO = adopterDAO;
     }
 
     public Optional<Staff> getStaffMemberByEmail(String email){
@@ -58,6 +64,10 @@ public class StaffService {
     public List<Pet> getAllPetsOfShelter(int shelterID){
         //assuming a reasonable number of pets in a shelter
         return petDAO.getAllPetsOfShelter(shelterID);
+    }
+
+    public Optional<Pet> getPetById(int petId){
+        return petDAO.get(petId);
     }
 
     public void addImage(int petID, String imageLink){
@@ -84,4 +94,30 @@ public class StaffService {
         petDocumentDAO.deleteDocument(documentLink);
     }
 
+    public Optional<Shelter> getShelter(int shelterId){
+        return shelterDAO.get(shelterId);
+    }
+    public List<Application> getAllApplicationsOfShelter(Shelter shelter){
+        return applicationDAO.getAllApplicationsOfShelter(shelter);
+    }
+
+    public Optional<Adopter> getAdopterById(int adopterId){
+        return adopterDAO.get(adopterId);
+    }
+
+    public Optional<Adopter> getAdopterByEmail(String adopterEmail){
+        return adopterDAO.getByEmail(adopterEmail);
+    }
+
+    public Optional<Application> getApplication(int adopterId, int petId){
+        return applicationDAO.getApplication(adopterId, petId);
+    }
+
+    public void setApplicationStatus(Application application, String newStatus){
+        applicationDAO.setApplicationStatus(
+                application.getAdopterId(),
+                application.getPetId(),
+                newStatus
+        );
+    }
 }

@@ -1,12 +1,14 @@
 package com.example.demo.DAO;
 
 import com.example.demo.Model.Application;
+import com.example.demo.Model.Shelter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ApplicationDAO{
@@ -14,6 +16,7 @@ public class ApplicationDAO{
     private RowMapper<Application> applicationRowMapper;
 
     private final String table = "application";
+    private final String petTable = "pet";
     private final String adopterIdColumn = "adopter_id";
     private final String petIdColumn = "pet_id";
     private final String statusColumn = "status";
@@ -51,6 +54,48 @@ public class ApplicationDAO{
                 adopterIdColumn
         );
         return template.query(sql, applicationRowMapper, adopterId);
+    }
+
+    public List<Application> getApplicationsOfPet(int petId){
+        String sql = String.format(
+                "select * from %s where %s = ?",
+                table,
+                petIdColumn
+        );
+        return template.query(sql, applicationRowMapper, petId);
+    }
+
+    public Optional<Application> getApplication(int adopterId, int petId){
+        String sql = String.format(
+                "select * from %s where %s = ? and %s = ?",
+                table,
+                adopterIdColumn,
+                petIdColumn
+        );
+        List<Application> appList = template.query(
+                sql,
+                applicationRowMapper,
+                adopterId,
+                petId
+        );
+        return Optional.ofNullable(appList.isEmpty() ? null : appList.get(0));
+    }
+
+    public List<Application> getAllApplicationsOfShelter(Shelter shelter){
+//        String sql = "select adopter_id, pet_id from " +
+//                "pet join application on pet.pet_id = application.pet_id";
+        String sql = String.format(
+                "select %s,%s from %s join %s on %s.%s = %s.%s",
+                adopterIdColumn,
+                petIdColumn,
+                petTable,
+                table,
+                petTable,
+                petIdColumn,
+                table,
+                petIdColumn
+        );
+        return template.query(sql, applicationRowMapper);
     }
 
     public void setApplicationStatus(int adopterId, int petId, String newStatus){
