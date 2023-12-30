@@ -21,6 +21,7 @@ public class RegistrationController {
 //    }
     @PostMapping("/register/addManager")
     public String addNewManager(@RequestBody Staff manager){
+        System.out.println("Adding manager requsest");
         if(managerService.emailExistsInStaff(manager.getEmail())){
             return "Email already exists";
         }
