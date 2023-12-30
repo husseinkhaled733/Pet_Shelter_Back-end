@@ -78,6 +78,16 @@ public class StaffController {
         if(applicationOptional.isEmpty()){
             throw new RuntimeException("Cannot find application");
         }
+        Optional<Pet> petOptional = staffService.getPetById(body.getPetId());
+        if(petOptional.isEmpty()){
+            throw new RuntimeException("Pet not found");
+        }
+        Pet pet = petOptional.get();
+        if(!pet.isAvailable()){
+            throw new RuntimeException("Pet not available");
+        }
+        pet.setAvailable(false);
+        staffService.updatePet(pet);
         staffService.setApplicationStatus(
                 applicationOptional.get(),
                 body.getStatus()
