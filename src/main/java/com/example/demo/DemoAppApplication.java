@@ -1,13 +1,16 @@
-package com.example.Pet_Shelter;
+package com.example.demo;
+
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+
 
 @SpringBootApplication
-public class PetShelterApplication {
+public class DemoAppApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PetShelterApplication.class, args);
+		SpringApplication.run(DemoAppApplication.class, args);
 	}
 
 }

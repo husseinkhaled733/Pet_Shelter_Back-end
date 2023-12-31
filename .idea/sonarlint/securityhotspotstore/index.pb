@@ -1,0 +1,25 @@
+
+9
+	README.md,8/e/8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
+k
+;src/main/java/com/example/demo/Security/SecurityConfig.java,7/f/7f6925e9440b8d51d81384f393c2dc754efd6cf5
+7
+pom.xml,4/4/442292b8a7efeabbe4cc176709b833b1792140ec
+x
+Hsrc/main/java/com/example/demo/Controllers/AddShelterRequestWrapper.java,9/8/98917f258f0aafe82dfb6542bd32693853488b16
+v
+Fsrc/main/java/com/example/demo/Controllers/AddStaffRequestWrapper.java,3/3/33d9c2f96c937cb6a06ae09cc7519fc1187090cc
+m
+=src/main/java/com/example/demo/Controllers/AuthUtilities.java,2/3/23681276aa492372c9d92ce8795debb835d27ca4
+j
+:src/main/java/com/example/demo/Controllers/Controller.java,8/9/895518f167ca9954d036333adef9e91f90d118e3
+f
+6src/main/java/com/example/demo/DemoAppApplication.java,3/9/395d4a3a6cd6a0f61e5c9e2c53adb5a94282420b
+v
+Fsrc/main/java/com/example/demo/Controllers/RegistrationController.java,c/a/cafee6db12173a00bc48abd8271b4bc504b9cf9b
+o
+?src/main/java/com/example/demo/Controllers/LoginController.java,d/d/dda028e9f345d8a570c02dcf199bcc14497ca6fc
+_
+/src/main/java/com/example/demo/Model/Staff.java,7/9/790252c0540f5b2aeb41ab94c60bd6fb8cde6def
+q
+Asrc/main/java/com/example/demo/Controllers/AdopterController.java,9/8/9804b3e77f565530b75f3e7cb6603cf2ae982db7
